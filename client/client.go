@@ -2,7 +2,9 @@ package client
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -14,9 +16,14 @@ type Client struct {
 
 type ClientOption func(*Client)
 
-func WithBaseURL(url string) ClientOption {
+func WithBaseURL(baseUrl string) ClientOption {
 	return func(c *Client) {
-		c.baseURL = url
+		u, err := url.Parse(baseUrl)
+		if err != nil {
+			log.Fatal("invalid url scheme")
+		}
+		u = u.JoinPath("api", "v1")
+		c.baseURL = u.String()
 	}
 }
 
@@ -56,7 +63,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	return c.httpClient.Do(req)
 }
 
-func (c *Client) Get(path string) (*http.Response, error) {
+func (c *Client) Get(path string, params ...string) (*http.Response, error) {
 	u := c.baseURL + path
 	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
