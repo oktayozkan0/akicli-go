@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"net/http"
@@ -69,6 +70,15 @@ func (c *Client) Get(path string, params map[string]string) (*http.Response, err
 		queries.Add(k, v)
 	}
 	req.URL.RawQuery = queries.Encode()
+	if err != nil {
+		return nil, err
+	}
+	return c.Do(req)
+}
+
+func (c *Client) Post(path string, body *bytes.Buffer) (*http.Response, error) {
+	u := c.baseURL + path
+	req, err := http.NewRequest("POST", u, body)
 	if err != nil {
 		return nil, err
 	}
