@@ -51,11 +51,14 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	} else {
 		return nil, fmt.Errorf("credentials required, you must login or provide a token")
 	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "akinoncli go")
 	return c.httpClient.Do(req)
 }
 
 func (c *Client) Get(path string) (*http.Response, error) {
-	req, err := http.NewRequest("GET", c.baseURL+path, nil)
+	u := c.baseURL + path
+	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, err
 	}
