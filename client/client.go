@@ -55,8 +55,6 @@ func NewClient(options ...ClientOption) (*Client, error) {
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if c.token != "" {
 		req.Header.Set("Authorization", c.token)
-	} else {
-		return nil, fmt.Errorf("credentials required, you must login or provide a token")
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("User-Agent", "akinoncli go")
