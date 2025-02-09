@@ -17,8 +17,8 @@ type Applications struct {
 	Results []Application
 }
 
-func (a *API) GetApps(params ...string) (*Applications, error) {
-	apps, err := a.client.Get(applicationsPath)
+func (a *API) GetApps(params map[string]string) (*Applications, error) {
+	apps, err := a.client.Get(applicationsPath, params)
 	if err != nil {
 		return nil, err
 	}

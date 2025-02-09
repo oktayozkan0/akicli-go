@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	apps, err := a.GetApps()
+	apps, err := a.GetApps(nil)
 	if err != nil {
 		log.Fatal(err)
 	}

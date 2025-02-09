@@ -63,9 +63,14 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	return c.httpClient.Do(req)
 }
 
-func (c *Client) Get(path string, params ...string) (*http.Response, error) {
+func (c *Client) Get(path string, params map[string]string) (*http.Response, error) {
 	u := c.baseURL + path
 	req, err := http.NewRequest("GET", u, nil)
+	queries := req.URL.Query()
+	for k, v := range params {
+		queries.Add(k, v)
+	}
+	req.URL.RawQuery = queries.Encode()
 	if err != nil {
 		return nil, err
 	}
