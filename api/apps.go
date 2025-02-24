@@ -17,11 +17,6 @@ type Application struct {
 	ApplicationType ApplicationType `json:"application_type"`
 }
 
-type ApplicationPaginated struct {
-	PaginatedResponse
-	Results []Application `json:"results"`
-}
-
 type ApplicationBuildStatus struct {
 }
 
@@ -33,13 +28,8 @@ type ApplicationVersion struct {
 	PatchNotes string `json:"patch_notes"`
 }
 
-type ApplicationVersionPaginated struct {
-	PaginatedResponse
-	Results []ApplicationVersion `json:"results"`
-}
-
-func (a *API) GetApps(params map[string]string) (*ApplicationPaginated, error) {
-	return FetchResource[ApplicationPaginated](a.client, applicationsPath, params)
+func (a *API) GetApps(params map[string]string) (*PaginatedResponse[Application], error) {
+	return FetchResource[PaginatedResponse[Application]](a.client, applicationsPath, params)
 }
 
 func (a *API) GetApp(id int) (*Application, error) {
@@ -47,9 +37,9 @@ func (a *API) GetApp(id int) (*Application, error) {
 	return FetchResource[Application](a.client, u, nil)
 }
 
-func (a *API) GetAppVersions(id int, params map[string]string) (*ApplicationVersionPaginated, error) {
+func (a *API) GetAppVersions(id int, params map[string]string) (*PaginatedResponse[ApplicationVersion], error) {
 	u := applicationsPath + "/" + strconv.Itoa(id) + "/versions/"
-	return FetchResource[ApplicationVersionPaginated](a.client, u, params)
+	return FetchResource[PaginatedResponse[ApplicationVersion]](a.client, u, params)
 }
 
 // func (a *API) BuildApp(id int) (*ApplicationBuildStatus, error) {

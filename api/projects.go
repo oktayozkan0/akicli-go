@@ -9,12 +9,7 @@ type Project struct {
 	TotalServiceCount int    `json:"total_service_count"`
 }
 
-type ProjectPaginated struct {
-	PaginatedResponse
-	Results []Project `json:"results"`
-}
-
-func (a *API) GetProjects(params map[string]string) (*ProjectPaginated, error) {
+func (a *API) GetProjects(params map[string]string) (*PaginatedResponse[Project], error) {
 	u := projectsPath
-	return FetchResource[ProjectPaginated](a.client, u, params)
+	return FetchResource[PaginatedResponse[Project]](a.client, u, params)
 }
