@@ -1,10 +1,7 @@
 package api
 
 import (
-	"encoding/json"
 	"strconv"
-
-	"github.com/oktayozkan0/akicli-go/utils"
 )
 
 type ApplicationType struct {
@@ -42,47 +39,17 @@ type ApplicationVersionPaginated struct {
 }
 
 func (a *API) GetApps(params map[string]string) (*ApplicationPaginated, error) {
-	apps, err := a.client.Get(applicationsPath, params)
-	if err != nil {
-		return nil, err
-	}
-	body, err := utils.ResponseAsBytes(apps)
-	if err != nil {
-		return nil, err
-	}
-	var response ApplicationPaginated
-	err = json.Unmarshal(body, &response)
-	return &response, err
+	return FetchResource[ApplicationPaginated](a.client, applicationsPath, params)
 }
 
 func (a *API) GetApp(id int) (*Application, error) {
 	u := applicationsPath + "/" + strconv.Itoa(id) + "/"
-	app, err := a.client.Get(u, nil)
-	if err != nil {
-		return nil, err
-	}
-	body, err := utils.ResponseAsBytes(app)
-	if err != nil {
-		return nil, err
-	}
-	var response Application
-	err = json.Unmarshal(body, &response)
-	return &response, err
+	return FetchResource[Application](a.client, u, nil)
 }
 
 func (a *API) GetAppVersions(id int, params map[string]string) (*ApplicationVersionPaginated, error) {
 	u := applicationsPath + "/" + strconv.Itoa(id) + "/versions/"
-	app, err := a.client.Get(u, params)
-	if err != nil {
-		return nil, err
-	}
-	body, err := utils.ResponseAsBytes(app)
-	if err != nil {
-		return nil, err
-	}
-	var response ApplicationVersionPaginated
-	err = json.Unmarshal(body, &response)
-	return &response, err
+	return FetchResource[ApplicationVersionPaginated](a.client, u, params)
 }
 
 // func (a *API) BuildApp(id int) (*ApplicationBuildStatus, error) {
