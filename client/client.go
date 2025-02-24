@@ -23,7 +23,7 @@ func WithBaseURL(baseUrl string) ClientOption {
 		if err != nil {
 			log.Fatal("invalid url scheme")
 		}
-		// u = u.JoinPath("api", "v1")
+		u = u.JoinPath("api", "v1")
 		c.baseURL = u.String()
 	}
 }
