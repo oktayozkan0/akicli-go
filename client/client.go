@@ -30,7 +30,7 @@ func WithBaseURL(baseUrl string) ClientOption {
 
 func WithToken(token string) ClientOption {
 	return func(c *Client) {
-		c.token = token
+		c.Token = token
 	}
 }
 
@@ -54,8 +54,8 @@ func NewClient(options ...ClientOption) (*Client, error) {
 }
 
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
-	if c.token != "" {
-		req.Header.Set("Authorization", c.token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", c.Token)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("User-Agent", "akinoncli go")
