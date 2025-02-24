@@ -28,6 +28,9 @@ func (a *API) Login(email, password string) error {
 		return err
 	}
 	body, err := utils.ResponseAsBytes(req)
+	if err != nil {
+		return err
+	}
 	var response LoginResponse
 	json.Unmarshal(body, &response)
 	a.client.Token = response.Token
