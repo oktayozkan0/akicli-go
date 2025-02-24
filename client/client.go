@@ -11,7 +11,7 @@ import (
 
 type Client struct {
 	baseURL    string
-	token      string
+	Token      string
 	httpClient *http.Client
 }
 

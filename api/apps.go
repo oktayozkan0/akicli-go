@@ -20,12 +20,28 @@ type Application struct {
 	ApplicationType ApplicationType `json:"application_type"`
 }
 
-type Applications struct {
+type ApplicationPaginated struct {
 	PaginatedResponse
-	Results []Application
+	Results []Application `json:"results"`
 }
 
-func (a *API) GetApps(params map[string]string) (*Applications, error) {
+type ApplicationBuildStatus struct {
+}
+
+type ApplicationVersion struct {
+	Pk         int    `json:"pk"`
+	App        string `json:"app"`
+	Tag        string `json:"tag"`
+	Status     string `json:"status"`
+	PatchNotes string `json:"patch_notes"`
+}
+
+type ApplicationVersionPaginated struct {
+	PaginatedResponse
+	Results []ApplicationVersion `json:"results"`
+}
+
+func (a *API) GetApps(params map[string]string) (*ApplicationPaginated, error) {
 	apps, err := a.client.Get(applicationsPath, params)
 	if err != nil {
 		return nil, err
@@ -34,7 +50,7 @@ func (a *API) GetApps(params map[string]string) (*Applications, error) {
 	if err != nil {
 		return nil, err
 	}
-	var response Applications
+	var response ApplicationPaginated
 	err = json.Unmarshal(body, &response)
 	return &response, err
 }
@@ -53,3 +69,22 @@ func (a *API) GetApp(id int) (*Application, error) {
 	err = json.Unmarshal(body, &response)
 	return &response, err
 }
+
+func (a *API) GetAppVersions(id int, params map[string]string) (*ApplicationVersionPaginated, error) {
+	u := applicationsPath + "/" + strconv.Itoa(id) + "/versions/"
+	app, err := a.client.Get(u, params)
+	if err != nil {
+		return nil, err
+	}
+	body, err := utils.ResponseAsBytes(app)
+	if err != nil {
+		return nil, err
+	}
+	var response ApplicationVersionPaginated
+	err = json.Unmarshal(body, &response)
+	return &response, err
+}
+
+// func (a *API) BuildApp(id int) (*ApplicationBuildStatus, error) {
+
+// }

@@ -3,11 +3,15 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"net/http"
+
+	"github.com/oktayozkan0/akicli-go/utils"
 )
 
-// api returns 500 internal server error for some reason. idk why. so i will not going to test this one.
-func (a *API) Login(email, password string) (*http.Response, error) {
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
+func (a *API) Login(email, password string) error {
 	u := loginPath + "/"
 	reqBody, err := json.Marshal(
 		map[string]interface{}{
@@ -17,11 +21,15 @@ func (a *API) Login(email, password string) (*http.Response, error) {
 	)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 	req, err := a.client.Post(u, bytes.NewBuffer(reqBody))
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return req, nil
+	body, err := utils.ResponseAsBytes(req)
+	var response LoginResponse
+	json.Unmarshal(body, &response)
+	a.client.Token = response.Token
+	return nil
 }
