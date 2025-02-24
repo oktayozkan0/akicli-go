@@ -23,7 +23,7 @@ func WithBaseURL(baseUrl string) ClientOption {
 		if err != nil {
 			log.Fatal("invalid url scheme")
 		}
-		u = u.JoinPath("api", "v1")
+		// u = u.JoinPath("api", "v1")
 		c.baseURL = u.String()
 	}
 }
@@ -79,6 +79,7 @@ func (c *Client) Get(path string, params map[string]string) (*http.Response, err
 func (c *Client) Post(path string, body *bytes.Buffer) (*http.Response, error) {
 	u := c.baseURL + path
 	req, err := http.NewRequest("POST", u, body)
+	fmt.Println(u)
 	if err != nil {
 		return nil, err
 	}

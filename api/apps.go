@@ -40,7 +40,7 @@ func (a *API) GetApps(params map[string]string) (*Applications, error) {
 }
 
 func (a *API) GetApp(id int) (*Application, error) {
-	u := "/applications/" + strconv.Itoa(id) + "/"
+	u := applicationsPath + "/" + strconv.Itoa(id) + "/"
 	app, err := a.client.Get(u, nil)
 	if err != nil {
 		return nil, err
