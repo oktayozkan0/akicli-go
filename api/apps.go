@@ -1,7 +1,7 @@
 package api
 
 import (
-	"strconv"
+	"fmt"
 )
 
 type ApplicationType struct {
@@ -33,15 +33,16 @@ func (a *API) GetApps(params map[string]string) (*PaginatedResponse[Application]
 }
 
 func (a *API) GetApp(id int) (*Application, error) {
-	u := applicationsPath + "/" + strconv.Itoa(id) + "/"
+	u := fmt.Sprintf(applicationDetailPath, id)
 	return FetchResource[Application](a.client, u, nil)
 }
 
 func (a *API) GetAppVersions(id int, params map[string]string) (*PaginatedResponse[ApplicationVersion], error) {
-	u := applicationsPath + "/" + strconv.Itoa(id) + "/versions/"
+	u := fmt.Sprintf(applicationVersionsPath, id)
 	return FetchResource[PaginatedResponse[ApplicationVersion]](a.client, u, params)
 }
 
-// func (a *API) BuildApp(id int) (*ApplicationBuildStatus, error) {
-
-// }
+func (a *API) GetAppVersionDetails(appid, versionid int) (*ApplicationVersion, error) {
+	u := fmt.Sprintf(applicationVersionDetailPath, appid, versionid)
+	return FetchResource[ApplicationVersion](a.client, u, nil)
+}
