@@ -12,7 +12,7 @@ type LoginResponse struct {
 }
 
 func (a *API) Login(email, password string) error {
-	u := loginPath + "/"
+	u := LoginPath + "/"
 	reqBody, err := json.Marshal(
 		map[string]interface{}{
 			"email":    email,

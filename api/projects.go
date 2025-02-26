@@ -10,6 +10,6 @@ type Project struct {
 }
 
 func (a *API) GetProjects(params map[string]string) (*PaginatedResponse[Project], error) {
-	u := projectsPath
+	u := ProjectsPath
 	return FetchResource[PaginatedResponse[Project]](a.client, u, params)
 }

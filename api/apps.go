@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 )
 
@@ -29,20 +31,37 @@ type ApplicationVersion struct {
 }
 
 func (a *API) GetApps(params map[string]string) (*PaginatedResponse[Application], error) {
-	return FetchResource[PaginatedResponse[Application]](a.client, applicationsPath, params)
+	return FetchResource[PaginatedResponse[Application]](a.client, ApplicationsPath, params)
 }
 
-func (a *API) GetApp(id int) (*Application, error) {
-	u := fmt.Sprintf(applicationDetailPath, id)
+func (a *API) GetApp(appid int) (*Application, error) {
+	u := fmt.Sprintf(ApplicationDetailPath, appid)
 	return FetchResource[Application](a.client, u, nil)
 }
 
-func (a *API) GetAppVersions(id int, params map[string]string) (*PaginatedResponse[ApplicationVersion], error) {
-	u := fmt.Sprintf(applicationVersionsPath, id)
+func (a *API) GetAppVersions(appid int, params map[string]string) (*PaginatedResponse[ApplicationVersion], error) {
+	u := fmt.Sprintf(ApplicationVersionsPath, appid)
 	return FetchResource[PaginatedResponse[ApplicationVersion]](a.client, u, params)
 }
 
 func (a *API) GetAppVersionDetails(appid, versionid int) (*ApplicationVersion, error) {
-	u := fmt.Sprintf(applicationVersionDetailPath, appid, versionid)
+	u := fmt.Sprintf(ApplicationVersionDetailPath, appid, versionid)
 	return FetchResource[ApplicationVersion](a.client, u, nil)
+}
+
+func (a *API) BuildApp(appid int, tag string) error {
+	u := fmt.Sprintf(ApplicationBuildPath, appid)
+	requestData, err := json.Marshal(
+		map[string]interface{}{
+			"tag": tag,
+		},
+	)
+	if err != nil {
+		return err
+	}
+	_, err = a.client.Post(u, bytes.NewBuffer(requestData))
+	if err != nil {
+		return err
+	}
+	return nil
 }
