@@ -3,7 +3,6 @@ package client
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -21,7 +20,7 @@ func WithBaseURL(baseUrl string) ClientOption {
 	return func(c *Client) {
 		u, err := url.Parse(baseUrl)
 		if err != nil {
-			log.Fatal("invalid url scheme")
+			panic(err)
 		}
 		u = u.JoinPath("api", "v1")
 		c.baseURL = u.String()
