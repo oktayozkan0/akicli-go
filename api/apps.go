@@ -30,6 +30,11 @@ type ApplicationVersion struct {
 	PatchNotes string `json:"patch_notes"`
 }
 
+type BuildAppRequest struct {
+	Tag        string `json:"tag"`
+	PatchNotes string `json:"patch_notes"`
+}
+
 func (a *API) GetApps(params map[string]string) (*PaginatedResponse[Application], error) {
 	return FetchResource[PaginatedResponse[Application]](a.client, ApplicationsPath, params)
 }
@@ -49,13 +54,13 @@ func (a *API) GetAppVersionDetails(appid, versionid int) (*ApplicationVersion, e
 	return FetchResource[ApplicationVersion](a.client, u, nil)
 }
 
-func (a *API) BuildApp(appid int, tag string) error {
+func (a *API) BuildApp(appid int, tag, notes string) error {
 	u := fmt.Sprintf(ApplicationBuildPath, appid)
-	requestData, err := json.Marshal(
-		map[string]interface{}{
-			"tag": tag,
-		},
-	)
+	buildPayload := BuildAppRequest{
+		Tag:        tag,
+		PatchNotes: notes,
+	}
+	requestData, err := json.Marshal(buildPayload)
 	if err != nil {
 		return err
 	}
