@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -22,7 +23,14 @@ func WithBaseURL(baseUrl string) ClientOption {
 		if err != nil {
 			panic(err)
 		}
-		u = u.JoinPath("api", "v1")
+		hasSlashSuffix := strings.HasSuffix(u.String(), "/")
+		if hasSlashSuffix {
+			u.Path = u.Path[:len(u.Path)-1]
+		}
+		pathHasApiSuffix := strings.HasSuffix(u.Path, "api/v1")
+		if !pathHasApiSuffix {
+			u = u.JoinPath("api", "v1")
+		}
 		c.baseURL = u.String()
 	}
 }
