@@ -36,7 +36,7 @@ func (a *API) Login(email, password string) (*APIResponse[LoginResponse], error)
 	return resp, nil
 }
 
-func (a *API) GetCurrentUser() (*APIResponse[UserResponse], error) {
+func (a *API) GetCurrentUser() (*UserResponse, error) {
 	u := CurrentUserPath
-	return FetchResource[APIResponse[UserResponse]](a.client, u, nil)
+	return FetchResource[UserResponse](a.client, u, nil)
 }
