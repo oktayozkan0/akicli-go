@@ -7,6 +7,12 @@ import (
 	"github.com/oktayozkan0/akicli-go/utils"
 )
 
+type APIResponse struct {
+	StatusCode int
+	RawContent []byte
+	Response   LoginResponse
+}
+
 type LoginResponse struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
@@ -14,7 +20,7 @@ type LoginResponse struct {
 	Token     string `json:"token"`
 }
 
-func (a *API) Login(email, password string) (*LoginResponse, error) {
+func (a *API) Login(email, password string) (*APIResponse, error) {
 	u := LoginPath
 	reqBody, err := json.Marshal(
 		map[string]interface{}{
@@ -37,5 +43,10 @@ func (a *API) Login(email, password string) (*LoginResponse, error) {
 	var response LoginResponse
 	json.Unmarshal(body, &response)
 	a.client.Token = "Token " + response.Token
-	return &response, nil
+	apiResponse := APIResponse{
+		StatusCode: req.StatusCode,
+		RawContent: body,
+		Response:   response,
+	}
+	return &apiResponse, nil
 }
