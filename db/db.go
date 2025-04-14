@@ -19,7 +19,9 @@ type Db struct {
 			Account int    `json:"account"`
 		} `json:"1"`
 	} `json:"_default"`
-	path string
+	path      string
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }
 
 func getPath(path string) string {
@@ -47,13 +49,14 @@ func GetDb(path string) (*Db, error) {
 	return &db, nil
 }
 
-func (db *Db) Save() {
+func (db *Db) Save() error {
 	data, err := json.Marshal(db)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	err = os.WriteFile(db.path, data, 0644)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }

@@ -8,10 +8,13 @@ import (
 )
 
 type LoginResponse struct {
-	Token string `json:"token"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Token     string `json:"token"`
 }
 
-func (a *API) Login(email, password string) error {
+func (a *API) Login(email, password string) (*LoginResponse, error) {
 	u := LoginPath
 	reqBody, err := json.Marshal(
 		map[string]interface{}{
@@ -21,18 +24,18 @@ func (a *API) Login(email, password string) error {
 	)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req, err := a.client.Post(u, bytes.NewBuffer(reqBody))
 	if err != nil {
-		return err
+		return nil, err
 	}
 	body, err := utils.ResponseAsBytes(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	var response LoginResponse
 	json.Unmarshal(body, &response)
 	a.client.Token = "Token " + response.Token
-	return nil
+	return &response, nil
 }
