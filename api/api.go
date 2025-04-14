@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 
 	"github.com/oktayozkan0/akicli-go/client"
@@ -29,6 +30,26 @@ func FetchResource[T any](client *client.Client, path string, params map[string]
 		return nil, err
 	}
 	var result T
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func PostData[T, P any](client *client.Client, path string, data T, response P) (*P, error) {
+	requestData, err := json.Marshal(path)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.Post(path, bytes.NewBuffer(requestData))
+	if err != nil {
+		return nil, err
+	}
+	body, err := utils.ResponseAsBytes(resp)
+	if err != nil {
+		return nil, err
+	}
+	var result P
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil, err
 	}

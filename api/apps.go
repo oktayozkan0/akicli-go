@@ -1,8 +1,6 @@
 package api
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 )
 
@@ -60,11 +58,8 @@ func (a *API) BuildApp(appid int, tag, notes string) error {
 		Tag:        tag,
 		PatchNotes: notes,
 	}
-	requestData, err := json.Marshal(buildPayload)
-	if err != nil {
-		return err
-	}
-	_, err = a.client.Post(u, bytes.NewBuffer(requestData))
+	var s struct{}
+	_, err := PostData(a.client, u, buildPayload, s)
 	if err != nil {
 		return err
 	}

@@ -2,6 +2,7 @@ package api
 
 const (
 	LoginPath                    = "/users/login/"                            // implemented
+	CurrentUserPath              = "/users/me/"                               // implemented
 	ApplicationsPath             = "/applications"                            // implemented
 	ApplicationDetailPath        = "/applications/%d/"                        // implemented
 	ApplicationBuildPath         = "/applications/%d/build/"                  // implemented
